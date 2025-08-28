@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "chrome 内置AI工具",
-  "description": "chrome 内置AI工具",
+  "description": "使用chrome内置AI Gemini Nano，支持离线使用",
   "permissions": [
     "sidePanel"
   ],
