@@ -1,16 +1,27 @@
 {
   "manifest_version": 3,
-  "name": "offline-ai-extension",
-  "description": "offline-ai-extension",
+  "name": "chrome 内置AI工具",
+  "description": "chrome 内置AI工具",
+  "permissions": [
+    "sidePanel"
+  ],
+  "side_panel": {
+    "default_path": "src/pages/panel/index.html",
+    "openPanelOnActionClick": true
+  },
+  "action": {
+    "default_icon": "public/icons/icon32.png",
+    "default_title": "打开侧边栏"
+  },
   "icons": {
-    "128": "icon-128.png"
+    "128": "public/icons/icon128.png"
   },
   "web_accessible_resources": [
     {
       "resources": [
         "contentStyle.css",
-        "icon-128.png",
-        "icon-32.png"
+        "public/icons/icon128.png",
+        "public/icons/icon32.png"
       ],
       "matches": []
     }
