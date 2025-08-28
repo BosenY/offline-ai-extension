@@ -22,16 +22,26 @@ export default function Panel() {
   const [value, setValue] = useState('');
   const [messages, setMessages] = useState<any[]>([]);
   const sessionRef = useRef<any>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
   const { message } = App.useApp()
+
+  // 自动滚动到底部的函数
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  // 当消息更新时自动滚动
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
   const initCheckChat = async () => {
     if (!('LanguageModel' in self)) {
       message.error('当前浏览器不支持AI功能');
       return;
     }
   }
-  useEffect(() => {
-    console.log(messages);
-  }, [messages]);
+  
   const chat = async (value: string) => {
     if(!sessionRef.current) {
       try {
@@ -90,7 +100,19 @@ export default function Panel() {
   return (
       <Layout style={{ height: '100vh', width: '100vw', backgroundColor: '#fff' }}>
         <Content style={{ padding: '20px' }}>
-          <Flex gap="middle" style={{ paddingBottom: '120px', overflowY: 'auto', paddingTop: '20px', height: '100%' }} vertical>
+          <Flex 
+            gap="middle" 
+            style={{ 
+              paddingBottom: '120px', 
+              overflowY: 'auto', 
+              paddingTop: '20px', 
+              height: '100%',
+              scrollbarWidth: 'none', // Firefox
+              msOverflowStyle: 'none', // IE and Edge
+            }} 
+            className="messages-container"
+            vertical
+          >
             {messages.map((message, index) => (
               <Bubble
                placement={message.role === 'user' ? 'end' : 'start'} 
@@ -100,6 +122,7 @@ export default function Panel() {
                typing={{ step: 2, interval: 50 }}
                />
             ))}
+            <div ref={messagesEndRef} />
           </Flex>
         </Content>
         <Footer style={{ backgroundColor: '#fff', width: '100%', padding: '20px', position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 1000 }}>
