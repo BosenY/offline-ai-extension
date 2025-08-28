@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { flushSync } from "react-dom";
-import { Flex, Layout, App, Typography, } from 'antd';
+import { Flex, Layout, App, Typography, Progress, Card } from 'antd';
 import { cloneDeep } from 'lodash-es';
 import Markdown from 'react-markdown'
 const { Header, Footer, Sider, Content } = Layout;
@@ -26,6 +26,8 @@ export default function Panel() {
   const [loading, setLoading] = useState(false);
   const [value, setValue] = useState('');
   const [messages, setMessages] = useState<any[]>([]);
+  const [downloadProgress, setDownloadProgress] = useState<number | null>(null);
+  const [isDownloading, setIsDownloading] = useState(false);
   const sessionRef = useRef<any>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { message } = App.useApp()
@@ -56,17 +58,17 @@ export default function Panel() {
           monitor(m: any) {
             m.addEventListener('downloadprogress', (e: any) => {
               if (status != 'available') {
-                message.open({
-                  type: e.loaded * 100 < 100 ? 'loading' : 'success',
-                    key: 'downloadprogress',
-                    content: `模型加载进度：${e.loaded * 100}%`,
-                  });
+                const progress = Math.floor(e.loaded * 100);
+                setIsDownloading(true);
+                setDownloadProgress(progress);
 
-                if(e.loaded * 100 >= 100) {
-                  message.destroy('downloadprogress')
+                if(progress >= 100) {
+                  setTimeout(() => {
+                    setIsDownloading(false);
+                    setDownloadProgress(null);
+                  }, 1000);
                 }
               }
-              
             });
           },
         });  
@@ -108,7 +110,52 @@ export default function Panel() {
   }, []);
   return (
       <Layout style={{ height: '100vh', width: '100vw', backgroundColor: '#fff' }}>
-        <Content style={{ padding: '20px' }}>
+        {isDownloading && (
+          <div style={{ 
+            position: 'fixed', 
+            top: 0, 
+            left: 0, 
+            right: 0, 
+            zIndex: 1001,
+            padding: '16px',
+            backgroundColor: 'rgba(255, 255, 255, 0.95)',
+            backdropFilter: 'blur(10px)',
+            borderBottom: '1px solid #f0f0f0',
+            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
+          }}>
+            <Card 
+              size="small" 
+              style={{ 
+                maxWidth: '400px', 
+                margin: '0 auto',
+                borderRadius: '12px',
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
+              }}
+            >
+              <div style={{ textAlign: 'center', marginBottom: '8px' }}>
+                <Typography.Text strong style={{ fontSize: '14px', color: '#1890ff' }}>
+                  🤖 AI模型下载中...
+                </Typography.Text>
+              </div>
+              <Progress 
+                percent={downloadProgress || 0} 
+                status={downloadProgress === 100 ? 'success' : 'active'}
+                strokeColor={{
+                  '0%': '#108ee9',
+                  '100%': '#87d068',
+                }}
+                showInfo={false}
+                style={{ marginBottom: '8px' }}
+              />
+              <div style={{ textAlign: 'center' }}>
+                <Typography.Text type="secondary" style={{ fontSize: '12px' }}>
+                  {downloadProgress}% 完成
+                </Typography.Text>
+              </div>
+            </Card>
+          </div>
+        )}
+        <Content style={{ padding: '20px', paddingTop: isDownloading ? '100px' : '20px' }}>
           <Flex 
             gap="middle" 
             style={{ 
