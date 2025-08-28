@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import { flushSync } from "react-dom";
 import { Flex, Layout, App, Typography, Progress, Card } from 'antd';
 import { cloneDeep } from 'lodash-es';
-import Markdown from 'react-markdown'
 const { Header, Footer, Sider, Content } = Layout;
 import '@pages/panel/Panel.css';
 import { Welcome, Sender, Bubble } from '@ant-design/x';
@@ -17,7 +16,6 @@ const md = markdownit({
 const renderMarkdown = (content: string) => {
   return (
     <Typography>
-      {/* biome-ignore lint/security/noDangerouslySetInnerHtml: used in demo */}
       <div dangerouslySetInnerHTML={{ __html: md.render(content) }} />
     </Typography>
   );
@@ -118,10 +116,10 @@ export default function Panel() {
             right: 0, 
             zIndex: 1001,
             padding: '16px',
-            backgroundColor: 'rgba(255, 255, 255, 0.95)',
-            backdropFilter: 'blur(10px)',
-            borderBottom: '1px solid #f0f0f0',
-            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
+            // backgroundColor: 'rgba(255, 255, 255, 0.95)',
+            // backdropFilter: 'blur(10px)',
+            // borderBottom: '1px solid #f0f0f0',
+            // boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
           }}>
             <Card 
               size="small" 
