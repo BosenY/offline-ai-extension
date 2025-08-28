@@ -16,3 +16,97 @@ body {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+
+/* 表格样式优化 */
+.messages-container table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 16px 0;
+  background-color: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid #f0f0f0;
+}
+
+.messages-container table th,
+.messages-container table td {
+  border: 1px solid #e8e8e8;
+  padding: 12px 16px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.messages-container table th {
+  background-color: #fafafa;
+  font-weight: 600;
+  color: #262626;
+  border-bottom: 2px solid #d9d9d9;
+}
+
+.messages-container table td {
+  background-color: #ffffff;
+  color: #595959;
+}
+
+.messages-container table tr:hover td {
+  background-color: #f5f5f5;
+}
+
+.messages-container table tr:nth-child(even) td {
+  background-color: #fafafa;
+}
+
+.messages-container table tr:nth-child(even):hover td {
+  background-color: #f0f0f0;
+}
+
+/* 表格容器样式 */
+.messages-container .ant-typography table {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* 表格标题样式 */
+.messages-container table caption {
+  font-size: 16px;
+  font-weight: 600;
+  color: #262626;
+  margin-bottom: 12px;
+  text-align: left;
+}
+
+/* 表格第一列样式（通常用于序号或重要信息） */
+.messages-container table td:first-child,
+.messages-container table th:first-child {
+  font-weight: 500;
+  background-color: #fafafa;
+}
+
+/* 表格最后一列样式 */
+.messages-container table td:last-child,
+.messages-container table th:last-child {
+  border-right: none;
+}
+
+/* 表格第一行样式 */
+.messages-container table tr:first-child th {
+  border-top: none;
+}
+
+/* 表格最后一行样式 */
+.messages-container table tr:last-child td {
+  border-bottom: none;
+}
+
+/* 确保表格在小屏幕上也能正常显示 */
+@media (max-width: 768px) {
+  .messages-container table {
+    font-size: 12px;
+  }
+  
+  .messages-container table th,
+  .messages-container table td {
+    padding: 8px 12px;
+  }
+}

@@ -8,7 +8,12 @@ import '@pages/panel/Panel.css';
 import { Welcome, Sender, Bubble } from '@ant-design/x';
 import markdownit from 'markdown-it';
 
-const md = markdownit({ html: true, breaks: true });
+const md = markdownit({ 
+  html: true, 
+  breaks: true,
+  linkify: true,
+  typographer: true
+});
 const renderMarkdown = (content: string) => {
   return (
     <Typography>
@@ -45,19 +50,23 @@ export default function Panel() {
   const chat = async (value: string) => {
     if(!sessionRef.current) {
       try {
-        await (self as any).LanguageModel.availability()
+        const status = await (self as any).LanguageModel.availability()
+        console.log(status);
         sessionRef.current = await (self as any).LanguageModel.create({
           monitor(m: any) {
             m.addEventListener('downloadprogress', (e: any) => {
-              // message.open({
-              //   type: e.loaded * 100 < 100 ? 'loading' : 'success',
-              //     key: 'downloadprogress',
-              //     content: `模型加载进度：${e.loaded * 100}%`,
-              //   });
+              if (status != 'available') {
+                message.open({
+                  type: e.loaded * 100 < 100 ? 'loading' : 'success',
+                    key: 'downloadprogress',
+                    content: `模型加载进度：${e.loaded * 100}%`,
+                  });
 
-              // if(e.loaded * 100 >= 100) {
-              //   message.destroy('downloadprogress')
-              // }
+                if(e.loaded * 100 >= 100) {
+                  message.destroy('downloadprogress')
+                }
+              }
+              
             });
           },
         });  
@@ -80,7 +89,7 @@ export default function Panel() {
     for await (const chunk of stream) {
       content += chunk
       flushSync(() => {
-        console.log(content);
+        // console.log(content);
         setMessages((prev: any) => {
           const updatedMessages = [...prev]
           updatedMessages[updatedMessages.length - 1] = {
